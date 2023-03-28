@@ -2,6 +2,9 @@ class Node:
     def __init__(self, xy):
         self.xy = xy
 
+    def __str__(self):
+        return str(self.xy)
+
     @property
     def x(self):
         return self.xy[0]
@@ -12,6 +15,11 @@ class Node:
 
     def __eq__(self, other):
         return self.xy == other
+
+    def distance2_from(self, other):
+        dx = self.x - other.x
+        dy = self.y - other.y
+        return dx * dx + dy * dy
 
 
 class Graph:
@@ -30,6 +38,13 @@ class Graph:
         min_y = min(node.y for node in self.nodes)
         max_y = max(node.y for node in self.nodes)
         return Node(((min_x + max_x) // 2, (min_y + max_y) // 2))
+
+    @property
+    def centremost_node(self):
+        C = self.centre
+        nodes = [(n.distance2_from(C), n) for n in self.nodes]
+        nodes.sort()
+        return nodes[0][1]
 
     def triangulate(self):
         """Triangulate the nodes using the the S-hull algorithm.

@@ -13,3 +13,7 @@ def test_graphs_init_nonempty():
 def test_graph_centre():
     """A Graph's centre is the centre of its bounding box."""
     assert Graph(TESTNODES).centre == (250, 250)
+
+def test_graph_centremost_node():
+    """A Graph's centremost node is the node closest to its centre."""
+    assert Graph(TESTNODES).centremost_node == (191, 241)
