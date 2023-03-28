@@ -10,6 +10,15 @@ dev = [
     "pytest",
 ]
 
+[project.scripts]
+utg-graphdriver = "utg.devel.graph_driver:main"
+
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "error",
+    "ignore:pkg_resources is deprecated as an API:DeprecationWarning",
+]

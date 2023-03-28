@@ -1,3 +1,6 @@
 [flake8]
 extend-ignore = E302
 exclude = .git,__pycache__,venv,build,dist
+per-file-ignores =
+    # module level import not at top of file
+    src/utg/devel/graph_driver.py: E402
