@@ -22,6 +22,11 @@ class Node:
         return dx * dx + dy * dy
 
 
+def nodes_by_distance_from(nodes, point):
+    nodes = ((node.distance2_from(point), node) for node in nodes)
+    return [node for _, node in sorted(nodes)]
+
+
 class Graph:
     def __init__(self, nodes=()):
         self.nodes = []
@@ -41,19 +46,23 @@ class Graph:
 
     @property
     def centremost_node(self):
-        C = self.centre
-        nodes = [(n.distance2_from(C), n) for n in self.nodes]
-        nodes.sort()
-        return nodes[0][1]
+        return nodes_by_distance_from(self.nodes, self.centre)[0]
 
     def triangulate(self):
         """Triangulate the nodes using the the S-hull algorithm.
         """
-        # For a set of unique points xi in R2:
-        #
-        #  1. Select a seed point x0 from xi.
-        #  2. Sort according to |xi − x0|**2
-        #  3. Find the point xj closest to x0.
+        # Select a seed point x0 from the set of unique points xi
+        x0 = self.centremost_node
+
+        # Sort the remaining points according to |xi − x0|**2
+        nodes = nodes_by_distance_from(
+            (node for node in self.nodes if node is not x0),
+            x0)
+
+        #  Find the point xj closest to x0
+        xj = nodes.pop(0)
+
+
         #  4. Find the point xk that creates the smallest circumcircle
         #     with x0 and xj and record the center of the circumcircle
         #     as C.
