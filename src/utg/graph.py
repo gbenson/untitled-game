@@ -27,6 +27,20 @@ def nodes_by_distance_from(nodes, point):
     return [node for _, node in sorted(nodes)]
 
 
+# https://en.wikipedia.org/wiki/Circumscribed_circle#Circumcenter_coordinates
+def circumcentre(a, b, c):
+    ax2Pay2 = a.x**2 + a.y**2
+    bx2Pby2 = b.x**2 + b.y**2
+    cx2Pcy2 = c.x**2 + c.y**2
+    byMcy, cyMay, ayMby = b.y - c.y, c.y - a.y, a.y - b.y
+    oOD = 0.5 / (a.x * byMcy + b.x * cyMay + c.x * ayMby)
+    return Node((oOD * (ax2Pay2 * byMcy +
+                        + bx2Pby2 * cyMay
+                        + cx2Pcy2 * ayMby),
+                 oOD * (ax2Pay2 * (c.x - b.x) +
+                        + bx2Pby2 * (a.x - c.x)
+                        + cx2Pcy2 * (b.x - a.x))))
+
 class Graph:
     def __init__(self, nodes=()):
         self.nodes = []
@@ -62,10 +76,14 @@ class Graph:
         #  Find the point xj closest to x0
         xj = nodes.pop(0)
 
+        # Find the point xk that creates the smallest circumcircle
+        # with x0 and xj and record the center of the circumcircle
+        # as C
+        tmp = ((node, circumcentre(x0, xj, node)) for node in nodes)
+        tmp = [(node.distance2_from(cc), node, cc) for node, cc in tmp]
+        _, xk, C = min(tmp)
+        nodes.remove(xk)
 
-        #  4. Find the point xk that creates the smallest circumcircle
-        #     with x0 and xj and record the center of the circumcircle
-        #     as C.
         #  5. Order points [x0, xj, xk] to give a right handed system.
         #     This is the initial seed convex hull.
         #  6. Re-sort the remaining points according to |xi − C|**2
