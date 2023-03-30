@@ -44,10 +44,26 @@ class GraphDriver:
         self.clock.tick(60)  # wait until next frame (at 60 FPS)
 
     def draw_screen(self, scale=2):
+        self.graph.triangulate()
         self.screen.fill("white")
+        for polygon in self.graph.mesh:
+            pygame.draw.polygon(self.screen,
+                                "black",
+                                [(node.x * scale,
+                                  node.y * scale)
+                                 for node in polygon.nodes],
+                                width=2 * scale)
+        pygame.draw.polygon(self.screen,
+                            "red",
+                            [(node.x * scale,
+                              node.y * scale)
+                             for node in self.graph.hull.nodes],
+                            width=2 * scale)
+
         for node in self.graph.nodes:
             pygame.draw.circle(self.screen,
-                               "navy",
+                               "red" if node in self.graph.hull.nodes
+                               else "navy",
                                (node.x * scale,
                                 node.y * scale),
                                radius=6 * scale)
