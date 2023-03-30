@@ -16,9 +16,12 @@ class Node:
     def __eq__(self, other):
         return self.xy == other
 
+    def __sub__(self, other):
+        return Node((self.x - other.x,
+                     self.y - other.y))
+
     def distance2_from(self, other):
-        dx = self.x - other.x
-        dy = self.y - other.y
+        dx, dy = (self - other).xy
         return dx * dx + dy * dy
 
 
