@@ -44,6 +44,15 @@ def circumcentre(a, b, c):
                         + bx2Pby2 * (a.x - c.x)
                         + cx2Pcy2 * (b.x - a.x))))
 
+
+# https://en.wikipedia.org/wiki/Cross_product#Computational_geometry
+def is_right_handed_system(a, b, c):
+    v = b - a
+    w = c - a
+    P = v.x * w.y - v.y * w.x
+    return P > 0
+
+
 class Graph:
     def __init__(self, nodes=()):
         self.nodes = []
@@ -87,8 +96,11 @@ class Graph:
         _, xk, C = min(tmp)
         nodes.remove(xk)
 
-        #  5. Order points [x0, xj, xk] to give a right handed system.
-        #     This is the initial seed convex hull.
+        # Order points [x0, xj, xk] to give a right handed system.
+        # This is the initial seed convex hull
+        if not is_right_handed_system(x0, xj, xk):
+            xj, xk = xk, xj
+
         #  6. Re-sort the remaining points according to |xi − C|**2
         #     to give points si.
         #  7. Sequentially add the points si to the propagating convex
