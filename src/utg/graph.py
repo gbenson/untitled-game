@@ -30,6 +30,15 @@ def nodes_by_distance_from(nodes, point):
     return [node for _, node in sorted(nodes)]
 
 
+class Polygon:
+    def __init__(self, nodes):
+        self.nodes = nodes
+
+
+class Triangle(Polygon):
+    pass
+
+
 # https://en.wikipedia.org/wiki/Circumscribed_circle#Circumcenter_coordinates
 def circumcentre(a, b, c):
     ax2Pay2 = a.x**2 + a.y**2
@@ -80,7 +89,7 @@ class Graph:
         # Select a seed point x0 from the set of unique points xi
         x0 = self.centremost_node
 
-        # Sort the remaining points according to |xi − x0|**2
+        # Sort the remaining points according to |xi - x0|**2
         nodes = nodes_by_distance_from(
             (node for node in self.nodes if node is not x0),
             x0)
@@ -100,9 +109,12 @@ class Graph:
         # This is the initial seed convex hull
         if not is_right_handed_system(x0, xj, xk):
             xj, xk = xk, xj
+        self.hull = Polygon([x0, xj, xk])
+        self.mesh = [Triangle(self.hull.nodes.copy())]
 
-        #  6. Re-sort the remaining points according to |xi − C|**2
-        #     to give points si.
+        # Re-sort the remaining points according to |xi - C|**2
+        nodes = nodes_by_distance_from(nodes, C)
+
         #  7. Sequentially add the points si to the propagating convex
         #     hull.  As each new point is added, the facets of the hull
         #     that are visible to it form new triangles.
