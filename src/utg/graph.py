@@ -38,6 +38,9 @@ class Polygon:
     def __init__(self, nodes):
         self.nodes = nodes
 
+    def __str__(self):
+        return repr(tuple(node.name or node.xy for node in self.nodes))
+
 
 class Triangle(Polygon):
     pass
@@ -122,9 +125,21 @@ class Graph:
         for i, node in enumerate(nodes):
             node.name = f"s{i}"
 
-        #  7. Sequentially add the points si to the propagating convex
-        #     hull.  As each new point is added, the facets of the hull
-        #     that are visible to it form new triangles.
+        # Sequentially add the points si to the propagating convex
+        # hull.  As each new point is added, the facets of the hull
+        # that are visible to it form new triangles.
+        for si in nodes:
+            for ip, (hj, hk) in enumerate(zip(self.hull.nodes,
+                                              self.hull.nodes[1:]
+                                              + self.hull.nodes[:1]),
+                                          start=1):
+                newtri = Triangle((hj, si, hk))
+                if not is_right_handed_system(*newtri.nodes):
+                    continue  # si not visible from hj-hk
+                self.hull.nodes.insert(ip, si)
+                self.mesh.append(newtri)
+            return
+
         #  8. A non-overlapping triangulation of the set of points has
         #     now been created.  Adjacent pairs of triangles of this
         #     triangulation must be ’flipped’ to create a Delaunay
