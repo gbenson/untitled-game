@@ -1,9 +1,13 @@
 class Node:
-    def __init__(self, xy):
+    def __init__(self, xy, name=None):
         self.xy = xy
+        self.name = name
 
     def __str__(self):
-        return str(self.xy)
+        result = str(tuple(self.xy))
+        if self.name is not None:
+            result = f"{self.name} {result}"
+        return result
 
     @property
     def x(self):
@@ -109,11 +113,14 @@ class Graph:
         # This is the initial seed convex hull
         if not is_right_handed_system(x0, xj, xk):
             xj, xk = xk, xj
+        x0.name, xj.name, xk.name = "x0", "xj", "xk"
         self.hull = Polygon([x0, xj, xk])
         self.mesh = [Triangle(self.hull.nodes.copy())]
 
         # Re-sort the remaining points according to |xi - C|**2
         nodes = nodes_by_distance_from(nodes, C)
+        for i, node in enumerate(nodes):
+            node.name = f"s{i}"
 
         #  7. Sequentially add the points si to the propagating convex
         #     hull.  As each new point is added, the facets of the hull

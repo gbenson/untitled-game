@@ -20,7 +20,9 @@ TESTNODES = (
 
 class GraphDriver:
     def __init__(self):
+        pygame.init()
         self.graph = Graph(TESTNODES)
+        self.fontname = pygame.font.match_font("noto sans mono")
         self.screen = pygame.display.set_mode((1000, 1000))
         self.clock = pygame.time.Clock()
 
@@ -67,6 +69,14 @@ class GraphDriver:
                                (node.x * scale,
                                 node.y * scale),
                                radius=6 * scale)
+
+        font = pygame.font.Font(self.fontname, size=10 * scale)
+        for node in self.graph.nodes:
+            text = font.render(node.name, True, "black")
+            rect = text.get_rect()
+            rect.top = (node.y + 2) * scale
+            rect.right = (node.x - 3) * scale
+            pygame.Surface.blit(self.screen, text, rect)
 
     def update_graph(self):
         pass
