@@ -129,10 +129,6 @@ class Graph:
         # hull.  As each new point is added, the facets of the hull
         # that are visible to it form new triangles.
         for si in nodes:
-            if stop_after is not None:
-                stop_after -= 1
-                if stop_after < 1:
-                    return
             for ip, (hj, hk) in enumerate(zip(self.hull.nodes,
                                               self.hull.nodes[1:]
                                               + self.hull.nodes[:1]),
@@ -140,6 +136,12 @@ class Graph:
                 newtri = Triangle((hj, si, hk))
                 if not is_right_handed_system(*newtri.nodes):
                     continue  # si not visible from hj-hk
+
+                if stop_after is not None:
+                    if stop_after < 1:
+                        return
+                    stop_after -= 1
+
                 self.hull.nodes.insert(ip, si)
                 self.mesh.append(newtri)
 
