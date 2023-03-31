@@ -25,6 +25,7 @@ class GraphDriver:
         self.fontname = pygame.font.match_font("noto sans mono")
         self.screen = pygame.display.set_mode((1000, 1000))
         self.clock = pygame.time.Clock()
+        self.stop_after = 0
 
     def run(self):
         while True:
@@ -37,6 +38,9 @@ class GraphDriver:
                                   pygame.K_q)):
                 event = pygame.event.Event(pygame.QUIT)
             else:
+                if (event.type == pygame.KEYUP
+                        and event.key == pygame.K_SPACE):
+                    self.stop_after += 1
                 self.update_graph()
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -46,7 +50,7 @@ class GraphDriver:
         self.clock.tick(60)  # wait until next frame (at 60 FPS)
 
     def draw_screen(self, scale=2):
-        self.graph.triangulate()
+        self.graph.triangulate(stop_after=self.stop_after)
         self.screen.fill("white")
         for polygon in self.graph.mesh:
             pygame.draw.polygon(self.screen,

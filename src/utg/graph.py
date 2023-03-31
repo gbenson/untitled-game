@@ -90,7 +90,7 @@ class Graph:
     def centremost_node(self):
         return nodes_by_distance_from(self.nodes, self.centre)[0]
 
-    def triangulate(self):
+    def triangulate(self, stop_after=None):
         """Triangulate the nodes using the the S-hull algorithm.
         """
         # Select a seed point x0 from the set of unique points xi
@@ -129,6 +129,10 @@ class Graph:
         # hull.  As each new point is added, the facets of the hull
         # that are visible to it form new triangles.
         for si in nodes:
+            if stop_after is not None:
+                stop_after -= 1
+                if stop_after < 1:
+                    return
             for ip, (hj, hk) in enumerate(zip(self.hull.nodes,
                                               self.hull.nodes[1:]
                                               + self.hull.nodes[:1]),
@@ -138,7 +142,6 @@ class Graph:
                     continue  # si not visible from hj-hk
                 self.hull.nodes.insert(ip, si)
                 self.mesh.append(newtri)
-            return
 
         #  8. A non-overlapping triangulation of the set of points has
         #     now been created.  Adjacent pairs of triangles of this
