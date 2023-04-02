@@ -30,7 +30,10 @@ class Graph:
     def add_edge(self, *args, **kwargs):
         edge_key = self._edge_key(*args, *kwargs)
         assert edge_key not in self._edges
-        edge = Edge([self.vertices[vi] for vi in edge_key])
+        vertices = [self.vertices[vi] for vi in edge_key]
+        edge = Edge(vertices)
+        for vertex in vertices:
+            vertex.edges.append(edge)
         self._edges[edge_key] = edge
         return edge
 

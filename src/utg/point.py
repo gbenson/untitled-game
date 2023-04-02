@@ -9,6 +9,7 @@ class Point(tuple):
         if len(t_xy) != 2:
             raise ValueError(xy)
         result = super(Point, cls).__new__(cls, t_xy)
+        result.edges = []
         result.visited = False
         return result
 
