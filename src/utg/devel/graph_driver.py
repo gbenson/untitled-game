@@ -43,7 +43,7 @@ class GraphDriver:
                     self.stop_after += 1
                 self.update_graph()
             if event.type == pygame.QUIT:
-                print(f"last triangle was", self.graph.mesh[-1])
+                print("last triangle was", self.graph.mesh[-1])
                 print(f"final hull = {self.graph.hull}")
                 pygame.quit()
                 sys.exit()

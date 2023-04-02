@@ -145,6 +145,40 @@ class Graph:
                 self.hull.nodes.insert(ip, si)
                 self.mesh.append(newtri)
 
+                # where we need to act is:
+                # s3 x0 xk needs adding
+                # which gobbles xk;
+                # s3=xk-x0 was the old perimiter,
+                # s3-x0 becomes the new perimiter
+                # because a line from xk to s3-x0 points out of the hull
+                # (the hull became concave at xk when we added s3)
+
+                # ugh, last triangle was ('xj', 's3', 'xk')
+                # final hull = ('x0', 's0', 's2', 's1', 'xj', 's3', 'xk')
+                # so we need to rotate the hull here
+                # (could just always rotate it one)
+
+                # Rotate the hull's nodes by two steps, to handle cases
+                # where the insertion point was right at the end.
+                self.hull.nodes.extend(self.hull.nodes[:2])
+                newtri = Triangle(self.hull.nodes[ip:ip + 3])
+                self.hull.nodes = self.hull.nodes[2:]
+                ip = None  # XXX 0 ?
+
+                # s3 xk x0 is the section of the hull we're papering over
+                #
+                if True:  # XXX hull is concave
+                    break
+
+                if stop_after is not None:
+                    if stop_after < 1:
+                        return
+                    stop_after -= 1
+
+                # This point got gobbled up!
+                self.hull.nodes.pop(ip + 1)
+                self.mesh.append(newtri)
+
         #  8. A non-overlapping triangulation of the set of points has
         #     now been created.  Adjacent pairs of triangles of this
         #     triangulation must be ’flipped’ to create a Delaunay
