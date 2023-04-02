@@ -2,7 +2,10 @@
 name = "untitled-game"
 version = "0.0.0"
 dependencies = [
+    "matplotlib",
     "pygame",
+    "PyGObject",
+    "scipy",
 ]
 
 [project.optional-dependencies]
@@ -12,6 +15,7 @@ dev = [
 
 [project.scripts]
 utg-graphdriver = "utg.devel.graph_driver:main"
+utg-leveldriver = "utg.devel.level_driver:main"
 
 [build-system]
 requires = ["setuptools>=61.0"]
