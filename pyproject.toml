@@ -2,9 +2,7 @@
 name = "untitled-game"
 version = "0.0.0"
 dependencies = [
-    "matplotlib",
     "pygame",
-    "PyGObject",
     "scipy",
 ]
 

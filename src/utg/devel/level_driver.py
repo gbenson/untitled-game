@@ -1,5 +1,8 @@
-import matplotlib
-import matplotlib.pyplot as plt
+import os
+import sys
+
+os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
+import pygame
 
 from utg.level import Level
 
@@ -17,17 +20,33 @@ TESTNODES = (
 
 def main():
     level = Level(TESTNODES)
-    # print(f"points.dtype = {level.points.dtype}")
-    # print(f"dmesh.points.dtype = {level.dmesh.points.dtype}")
-    # print(f"len(dmesh.simplices) = {len(level.dmesh.simplices)}")
 
-    matplotlib.use("GTK3Agg")
-    # plt.triplot([v.x for v in level.d_vertices],
-    #             [v.y for v in level.d_vertices],
-    #             level._d_simplices)
-    plt.plot([v.x for v in level.d_vertices],
-             [v.y for v in level.d_vertices], "bo")
-    plt.plot([v.x for v in level.v_vertices],
-             [v.y for v in level.v_vertices], "yo")
-    plt.gca().invert_yaxis()
-    plt.show()
+    pygame.init()
+    screen = pygame.display.set_mode((1000, 1000))
+    clock = pygame.time.Clock()
+
+    while True:
+        for event in pygame.event.get():
+            if (event.type == pygame.KEYUP
+                and event.key in (pygame.K_ESCAPE,
+                                  pygame.K_q)):
+                event = pygame.event.Event(pygame.QUIT)
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        screen.fill("white")
+        draw_graph(screen, level.v_graph, "gold")
+        draw_graph(screen, level.d_graph, "navy")
+        pygame.display.flip()  # Refresh on-screen display
+        clock.tick(60)  # wait until next frame (at 60 FPS)
+
+def draw_graph(surface, graph, color, scale=2):
+    for edge in graph.edges:
+        start, end = [(v.x * scale, v.y*scale) for v in edge.vertices]
+        pygame.draw.line(surface, color, start, end, width=2*scale)
+    for vertex in graph.vertices:
+        pygame.draw.circle(surface, color,
+                           (vertex.x * scale,
+                            vertex.y * scale),
+                           radius=6 * scale)
