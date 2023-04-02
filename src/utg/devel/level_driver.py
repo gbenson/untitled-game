@@ -22,9 +22,9 @@ def main():
     # print(f"len(dmesh.simplices) = {len(level.dmesh.simplices)}")
 
     matplotlib.use("GTK3Agg")
-    plt.triplot([v.x for v in level.d_vertices],
-                [v.y for v in level.d_vertices],
-                level._d_simplices)
+    # plt.triplot([v.x for v in level.d_vertices],
+    #             [v.y for v in level.d_vertices],
+    #             level._d_simplices)
     plt.plot([v.x for v in level.d_vertices],
              [v.y for v in level.d_vertices], "bo")
     plt.plot([v.x for v in level.v_vertices],
