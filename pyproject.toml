@@ -12,7 +12,7 @@ dev = [
 ]
 
 [project.scripts]
-utg-leveldriver = "utg.devel.level_driver:main"
+utg-mazedriver = "utg.devel.maze_driver:main"
 
 [build-system]
 requires = ["setuptools>=61.0"]

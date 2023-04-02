@@ -4,7 +4,7 @@ import sys
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 import pygame
 
-from utg.level import Level
+from utg.maze import Maze
 
 
 # The dark blue nodes from
@@ -19,7 +19,7 @@ TESTNODES = (
 )
 
 def main():
-    level = Level(TESTNODES)
+    maze = Maze(TESTNODES)
 
     pygame.init()
     screen = pygame.display.set_mode((1000, 1000))
@@ -36,8 +36,8 @@ def main():
                 sys.exit()
 
         screen.fill("white")
-        draw_graph(screen, level.v_graph, "gold")
-        draw_graph(screen, level.d_graph, "navy")
+        draw_graph(screen, maze.v_graph, "gold")
+        draw_graph(screen, maze.d_graph, "navy")
         pygame.display.flip()  # Refresh on-screen display
         clock.tick(60)  # wait until next frame (at 60 FPS)
 

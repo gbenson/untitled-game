@@ -14,7 +14,7 @@ from .point import Point
 #
 # https://en.wikipedia.org/wiki/Maze_generation_algorithm
 
-class Level:
+class Maze:
     def __init__(self, d_vertices=()):
         self.d_graph = Graph(d_vertices)
         self.v_graph = Graph()
