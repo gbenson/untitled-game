@@ -36,8 +36,8 @@ def main():
                 sys.exit()
 
         screen.fill("white")
-        draw_graph(screen, maze.v_graph, "gold")
-        draw_graph(screen, maze.d_graph, "navy")
+        draw_graph(screen, maze.path_graph, "gold")
+        draw_graph(screen, maze.wall_graph, "navy")
         pygame.display.flip()  # Refresh on-screen display
         clock.tick(60)  # wait until next frame (at 60 FPS)
 
