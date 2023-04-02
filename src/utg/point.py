@@ -8,7 +8,9 @@ class Point(tuple):
         t_xy = tuple(xy)
         if len(t_xy) != 2:
             raise ValueError(xy)
-        return super(Point, cls).__new__(cls, t_xy)
+        result = super(Point, cls).__new__(cls, t_xy)
+        result.visited = False
+        return result
 
     @property
     def x(self):

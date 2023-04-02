@@ -41,6 +41,7 @@ class Edge:
         if len(vertices) != 2:
             raise ValueError(vertices)
         self.vertices = vertices
+        self.visited = False
 
     @property
     def start(self):
