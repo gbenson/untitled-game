@@ -45,6 +45,8 @@ def main():
 
 def draw_graph(surface, graph, color, scale=2):
     for edge in graph.edges:
+        if not edge.visible:
+            continue
         start, end = [(v.x * scale, v.y*scale) for v in edge.vertices]
         pygame.draw.line(surface,
                          "red" if edge.visited else color,

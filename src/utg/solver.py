@@ -14,4 +14,27 @@ class Solver:
                    for i, v in enumerate(self.vertices))[-1]
 
     def visit(self):
-        pass
+        """Pick the edge that leads highest."""
+        # that one should be called "bubbling up"
+        unvisited_edges = [edge
+                           for edge in self.vertex.edges
+                           if not edge.visited]
+        if not unvisited_edges:
+            return
+        edge_vertex_pairs = [(edge, [vertex
+                                     for vertex in edge.vertices
+                                     if vertex is not self.vertex][0])
+                             for edge in unvisited_edges]
+        _, _, edge, vertex = min(sorted(
+            (vertex.y, vertex.x, edge, vertex)
+            for edge, vertex in edge_vertex_pairs
+            if not vertex.visited))
+        edge.visited = True
+        edge.wall_edge.visible = False
+        vertex.visited = True
+        self.vertex = vertex
+        for edge in self.vertex.edges:
+            if edge.visited:
+                continue
+            if all(vertex.visited for vertex in edge.vertices):
+                edge.visible = False

@@ -44,6 +44,7 @@ class Edge:
         if len(vertices) != 2:
             raise ValueError(vertices)
         self.vertices = vertices
+        self.visible = True
         self.visited = False
 
     @property
