@@ -1,7 +1,7 @@
 from scipy.spatial import Delaunay
 
 from .point import Point
-from .triangle import circumcentre
+from .triangle import circumcentre, is_circumcentre_within_triangle
 
 # A graph is a pair G = (V, E), where V is a set whose elements
 # are called vertices (singular: vertex), and E is a set of paired
@@ -34,12 +34,16 @@ class Level:
     def __init__(self, d_vertices=()):
         self.d_graph = Graph(d_vertices)
         self.v_graph = Graph()
+        self._d_simplices = []
 
         d = Delaunay(self.d_vertices)
         for vertex_indices in d.simplices:
-            self.v_graph.add_vertex(
-                circumcentre(*(self.d_graph.vertices[i]
-                               for i in vertex_indices)))
+            d_vertices = [self.d_graph.vertices[i]
+                          for i in vertex_indices]
+            if not is_circumcentre_within_triangle(*d_vertices):
+                continue
+            self.v_graph.add_vertex(circumcentre(*d_vertices))
+            self._d_simplices.append(vertex_indices)
 
     @property
     def d_vertices(self):
