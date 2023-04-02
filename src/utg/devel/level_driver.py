@@ -17,13 +17,16 @@ TESTNODES = (
 
 def main():
     level = Level(TESTNODES)
-    print(f"points.dtype = {level.points.dtype}")
-    print(f"dmesh.points.dtype = {level.dmesh.points.dtype}")
-    print(f"len(dmesh.simplices) = {len(level.dmesh.simplices)}")
+    # print(f"points.dtype = {level.points.dtype}")
+    # print(f"dmesh.points.dtype = {level.dmesh.points.dtype}")
+    # print(f"len(dmesh.simplices) = {len(level.dmesh.simplices)}")
 
     matplotlib.use("GTK3Agg")
-    plt.triplot(level.points[:, 0], level.points[:, 1],
-                level.dmesh.simplices)
-    plt.plot(level.points[:, 0], level.points[:, 1], "o")
+    # plt.triplot(level.points[:, 0], level.points[:, 1],
+    #             level.dmesh.simplices)
+    plt.plot([v.x for v in level.d_vertices],
+             [v.y for v in level.d_vertices], "bo")
+    plt.plot([v.x for v in level.v_vertices],
+             [v.y for v in level.v_vertices], "yo")
     plt.gca().invert_yaxis()
     plt.show()
