@@ -12,7 +12,6 @@ dev = [
 ]
 
 [project.scripts]
-utg-graphdriver = "utg.devel.graph_driver:main"
 utg-leveldriver = "utg.devel.level_driver:main"
 
 [build-system]
