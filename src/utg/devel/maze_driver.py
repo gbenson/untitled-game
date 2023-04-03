@@ -1,4 +1,5 @@
 import os
+import random
 
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 import pygame
@@ -18,8 +19,13 @@ TESTNODES = (
     (458, 407), (27, 415), (308, 433), (112, 466),
 )
 
+def testnodes(N=64):
+    random.seed(186283)
+    for _ in range(N):
+        yield random.randrange(10, 491), random.randrange(10, 491)
+
 def main():
-    maze = Maze(TESTNODES)
+    maze = Maze(testnodes())  # TESTNODES)
     solver = CaveSolver(maze)
 
     pygame.init()
@@ -31,20 +37,20 @@ def main():
             if event.type == pygame.KEYUP:
                 if event.key in (pygame.K_ESCAPE, pygame.K_q):
                     event = pygame.event.Event(pygame.QUIT)
-                elif event.key == pygame.K_SPACE:
-                    try:
-                        solver.visit()
-                    except StopIteration:
-                        pass
             if event.type == pygame.QUIT:
                 pygame.quit()
                 return
+
+        try:
+            solver.visit()
+        except StopIteration:
+            pass
 
         screen.fill("white")
         draw_graph(screen, maze.path_graph, "gold")
         draw_graph(screen, maze.wall_graph, "navy")
         pygame.display.flip()  # Refresh on-screen display
-        clock.tick(60)  # wait until next frame (at 60 FPS)
+        clock.tick(20)  # wait until next frame (at 60 FPS)
 
 def draw_graph(surface, graph, color, scale=2):
     for edge in graph.edges:
@@ -59,4 +65,4 @@ def draw_graph(surface, graph, color, scale=2):
                            "red" if vertex.visited else color,
                            (vertex.x * scale,
                             vertex.y * scale),
-                           radius=6 * scale)
+                           radius=3 * scale)
