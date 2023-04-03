@@ -4,7 +4,7 @@ os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 import pygame
 
 from utg.maze import Maze
-from utg.solver import Solver
+from utg.solver import CaveSolver
 
 
 # The dark blue nodes from
@@ -20,7 +20,7 @@ TESTNODES = (
 
 def main():
     maze = Maze(TESTNODES)
-    solver = Solver(maze)
+    solver = CaveSolver(maze)
 
     pygame.init()
     screen = pygame.display.set_mode((1000, 1000))
@@ -32,7 +32,10 @@ def main():
                 if event.key in (pygame.K_ESCAPE, pygame.K_q):
                     event = pygame.event.Event(pygame.QUIT)
                 elif event.key == pygame.K_SPACE:
-                    solver.visit()
+                    try:
+                        solver.visit()
+                    except StopIteration:
+                        pass
             if event.type == pygame.QUIT:
                 pygame.quit()
                 return
