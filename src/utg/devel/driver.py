@@ -18,8 +18,7 @@ class Driver:
         while True:
             self.handle_events()
             self.update()
-            self.draw()
-            pygame.display.flip()
+            self._draw()
             self.clock.tick(self.fps)
 
     def init(self):
@@ -48,6 +47,14 @@ class Driver:
 
     def update(self):
         pass
+
+    def _draw(self):
+        surface = self.draw()
+        if surface is not None:
+            pygame.transform.scale(surface,
+                                   self.display.get_size(),
+                                   self.display)
+        pygame.display.flip()
 
     def draw(self):
         pass

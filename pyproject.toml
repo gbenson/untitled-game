@@ -12,6 +12,7 @@ dev = [
 ]
 
 [project.scripts]
+testkarst = "utg.devel.karst_driver:main"
 utg-mazedriver = "utg.devel.maze_driver:main"
 
 [build-system]
