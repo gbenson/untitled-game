@@ -35,8 +35,9 @@ class KarstDriver(Driver):
     def update(self):
         getattr(self, f"_update_{self.mode.name}")()
 
-    def _update_FILLING(self):
-        for _ in range(self.w):
+    def _update_FILLING(self, fast=True):
+        num_cells = self.w * (self.h if fast else 1)
+        for _ in range(num_cells):
             # Find a column to fill
             x = random.randrange(self.w)
             for x in range(x, x + self.w):
