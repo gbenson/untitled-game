@@ -135,15 +135,15 @@ class KarstDriver(Driver):
                 self._h_fault(x)
             else:
                 self._v_fault(y)
-        self.mode = Modes.DONE
+        self.mode = Modes.ERODING
 
     def _h_fault(self, x):
         for y in range(self.h):
-            self.mset(x + self.w, y, 1)
+            self.mset(x, y, 0)
 
     def _v_fault(self, y):
         for x in range(self.w):
-            self.mset(x + self.w, y, 1)
+            self.mset(x, y, 0)
 
     def _update_DONE(self):
         pass
