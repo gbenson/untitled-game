@@ -6,7 +6,7 @@ import pygame
 
 from .driver import Driver
 
-Modes = Enum("Modes", ["FILLING", "ERODING"])
+Modes = Enum("Modes", ["FILLING", "ERODING", "FAULTING", "DONE"])
 
 class KarstDriver(Driver):
     def init(self):
@@ -45,9 +45,10 @@ class KarstDriver(Driver):
                 if self.mget(x, 0) == 0:
                     break
             else:
-                for x in range(self.w):
-                    self.wset(x, 0, 255)
-                self.mode = Modes.ERODING
+                # for x in range(self.w):
+                #     self.wset(x, 0, 255)
+                # self.mode = Modes.ERODING
+                self.mode = Modes.FAULTING
                 return
 
             # Drop the particle into it
@@ -117,11 +118,47 @@ class KarstDriver(Driver):
         for x in range(self.w):
             self.wset(x, 0, 255)
 
+    def _update_FAULTING(self, num_faults=20):
+        nexi = []
+        for threshold in range(256):
+            for y in range(self.h):
+                for x in range(self.w):
+                    if self.mget(x, y) <= threshold:
+                        nexi.append((x, y))
+            if len(nexi) >= num_faults:
+                break
+        for i in range(num_faults):
+            nexus = random.choice(nexi)
+            nexi.remove(nexus)
+            x, y = nexus
+            if i % 3 == 0:
+                self._h_fault(x)
+            else:
+                self._v_fault(y)
+        self.mode = Modes.DONE
+
+    def _h_fault(self, x):
+        for y in range(self.h):
+            self.mset(x + self.w, y, 1)
+
+    def _v_fault(self, y):
+        for x in range(self.w):
+            self.mset(x + self.w, y, 1)
+
+    def _update_DONE(self):
+        pass
+
     def draw(self):
         for y in range(self.h):
             for x in range(self.w):
                 v = self.mget(x, y)
                 w = self.mget(x + self.w, y)
+                if self.mode != Modes.ERODING:
+                    if w:
+                        self.ds.set_at((x, y), (255, 0, 0))
+                    else:
+                        self.ds.set_at((x, y), (v, v, v))
+                    continue
                 w = max(v - w, 0)
                 self.ds.set_at((x, y), (w, w, v))
         return self.ds
